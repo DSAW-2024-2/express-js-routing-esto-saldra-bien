@@ -3,8 +3,8 @@ const router = express.Router();
 
 let users = [
   // Ejemplo de usuarios iniciales
-  { id: '1', name: 'Juan Perez', email: 'juan@example.com', age: 30 },
-  { id: '2', name: 'Maria Gomez', email: 'maria@example.com', age: 25 },
+  { id: '1', name: 'Santiago Bazzani', email: '@unisabana.edu.co', age: 18 },
+  { id: '2', name: 'Forero', email: '@unisabana.edu.co', age: 18 },
 ];
 
 // GET /users: Obtener todos los usuarios
