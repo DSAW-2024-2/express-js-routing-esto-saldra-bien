@@ -1,27 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
 
-let products = [
-  // Ejemplo de productos iniciales
-  { id: '1', name: 'Laptop', price: 1000, category: 'Electronico' },
-  { id: '2', name: 'Phone', price: 500, category: 'Electronico' },
-];
+// Cargar datos desde data.json
+let data = JSON.parse(fs.readFileSync('data.json'));
 
-// GET /products: Obtener todos los productos
+// Obtener todos los productos
 router.get('/', (req, res) => {
-  res.json(products);
+  res.json(data.productos);
 });
 
-// POST /products: Crear un nuevo producto
+// Agregar un nuevo producto
 router.post('/', (req, res) => {
-  const newProduct = req.body;
-  products.push(newProduct);
+  const newProduct = req.body; 
+  data.productos.push(newProduct);
+  fs.writeFileSync('data.json', JSON.stringify(data, null, 2)); // Guardar cambios
   res.status(201).json(newProduct);
 });
 
-// GET /products/:id: Obtener un producto por ID
+// Obtener un producto por ID
 router.get('/:id', (req, res) => {
-  const product = products.find(p => p.id === req.params.id);
+  const product = data.productos.find(p => p.id === req.params.id);
   if (product) {
     res.json(product);
   } else {
@@ -29,22 +28,24 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// PUT /products/:id: Actualizar un producto existente
+// Actualizar un producto existente
 router.put('/:id', (req, res) => {
-  const productIndex = products.findIndex(p => p.id === req.params.id);
+  const productIndex = data.productos.findIndex(p => p.id === req.params.id);
   if (productIndex !== -1) {
-    products[productIndex] = req.body;
-    res.json(products[productIndex]);
+    data.productos[productIndex] = { ...data.productos[productIndex], ...req.body };
+    fs.writeFileSync('data.json', JSON.stringify(data, null, 2)); // Guardar cambios
+    res.json(data.productos[productIndex]);
   } else {
     res.status(404).send({ message: 'Producto no encontrado' });
   }
 });
 
-// DELETE /products/:id: Eliminar un producto
+// Eliminar un producto
 router.delete('/:id', (req, res) => {
-  const productIndex = products.findIndex(p => p.id === req.params.id);
+  const productIndex = data.productos.findIndex(p => p.id === req.params.id);
   if (productIndex !== -1) {
-    products.splice(productIndex, 1);
+    data.productos.splice(productIndex, 1);
+    fs.writeFileSync('data.json', JSON.stringify(data, null, 2)); // Guardar cambios
     res.status(204).send();
   } else {
     res.status(404).send({ message: 'Producto no encontrado' });

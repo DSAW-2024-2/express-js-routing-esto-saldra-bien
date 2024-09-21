@@ -1,0 +1,46 @@
+{
+  "usuarios": [
+    {
+      "id": "1",
+      "name": "santiago Bazzani",
+      "email": "santiagobari@unisabana.edu.co",
+      "age": 18
+    },
+    {
+      "id": "2",
+      "name": "Daniel Forero",
+      "email": "danielforero@unisabana.edu.co",
+      "age": 18
+    }
+  ],
+  "productos": [
+    {
+      "id": "1",
+      "name": "Laptop",
+      "price": 1000,
+      "category": "Electronics"
+    },
+    {
+      "id": "2",
+      "name": "Phone",
+      "price": 500,
+      "category": "Electronics"
+    }
+  ],
+  "pedidos": [
+    {
+      "id": "1",
+      "userId": "1",
+      "productId": "2",
+      "quantity": 1,
+      "status": "Pendiente"
+    },
+    {
+      "id": "2",
+      "userId": "2",
+      "productId": "1",
+      "quantity": 2,
+      "status": "Entregando"
+    }
+  ]
+}

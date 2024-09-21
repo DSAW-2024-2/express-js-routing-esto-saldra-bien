@@ -1,27 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
 
-let users = [
-  // Ejemplo de usuarios iniciales
-  { id: '1', name: 'Santiago Bazzani', email: '@unisabana.edu.co', age: 18 },
-  { id: '2', name: 'Forero', email: '@unisabana.edu.co', age: 18 },
-];
+// Cargar datos desde data.json
+let data = JSON.parse(fs.readFileSync('data.json'));
 
-// GET /users: Obtener todos los usuarios
+// Obtener todos los usuarios
 router.get('/', (req, res) => {
-  res.json(users);
+  res.json(data.usuarios);
 });
 
-// POST /users: Crear un nuevo usuario
+// Agregar un nuevo usuario
 router.post('/', (req, res) => {
-  const newUser = req.body;
-  users.push(newUser);
+  const newUser = req.body; 
+  data.usuarios.push(newUser);
+  fs.writeFileSync('data.json', JSON.stringify(data, null, 2)); // Guardar cambios
   res.status(201).json(newUser);
 });
 
-// GET /users/:id: Obtener un usuario por ID
+// Obtener un usuario por ID
 router.get('/:id', (req, res) => {
-  const user = users.find(u => u.id === req.params.id);
+  const user = data.usuarios.find(u => u.id === req.params.id);
   if (user) {
     res.json(user);
   } else {
@@ -29,22 +28,24 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// PUT /users/:id: Actualizar un usuario existente
+// Actualizar un usuario existente
 router.put('/:id', (req, res) => {
-  const userIndex = users.findIndex(u => u.id === req.params.id);
+  const userIndex = data.usuarios.findIndex(u => u.id === req.params.id);
   if (userIndex !== -1) {
-    users[userIndex] = req.body;
-    res.json(users[userIndex]);
+    data.usuarios[userIndex] = { ...data.usuarios[userIndex], ...req.body };
+    fs.writeFileSync('data.json', JSON.stringify(data, null, 2)); // Guardar cambios
+    res.json(data.usuarios[userIndex]);
   } else {
     res.status(404).send({ message: 'Usuario no encontrado' });
   }
 });
 
-// DELETE /users/:id: Eliminar un usuario
+// Eliminar un usuario
 router.delete('/:id', (req, res) => {
-  const userIndex = users.findIndex(u => u.id === req.params.id);
+  const userIndex = data.usuarios.findIndex(u => u.id === req.params.id);
   if (userIndex !== -1) {
-    users.splice(userIndex, 1);
+    data.usuarios.splice(userIndex, 1);
+    fs.writeFileSync('data.json', JSON.stringify(data, null, 2)); // Guardar cambios
     res.status(204).send();
   } else {
     res.status(404).send({ message: 'Usuario no encontrado' });

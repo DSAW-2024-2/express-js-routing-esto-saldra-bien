@@ -1,27 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
 
-let orders = [
-  // Ejemplo de pedidos iniciales
-  { id: '1', userId: '1', productId: '2', quantity: 1, status: 'Pending' },
-  { id: '2', userId: '2', productId: '1', quantity: 2, status: 'Shipped' },
-];
+// Cargar datos desde data.json
+let data = JSON.parse(fs.readFileSync('data.json'));
 
-// GET /orders: Obtener todos los pedidos
+// Obtener todos los pedidos
 router.get('/', (req, res) => {
-  res.json(orders);
+  res.json(data.pedidos);
 });
 
-// POST /orders: Crear un nuevo pedido
+// Agregar un nuevo pedido
 router.post('/', (req, res) => {
-  const newOrder = req.body;
-  orders.push(newOrder);
+  const newOrder = req.body; 
+  data.pedidos.push(newOrder);
+  fs.writeFileSync('data.json', JSON.stringify(data, null, 2)); // Guardar cambios
   res.status(201).json(newOrder);
 });
 
-// GET /orders/:id: Obtener un pedido por ID
+// Obtener un pedido por ID
 router.get('/:id', (req, res) => {
-  const order = orders.find(o => o.id === req.params.id);
+  const order = data.pedidos.find(o => o.id === req.params.id);
   if (order) {
     res.json(order);
   } else {
